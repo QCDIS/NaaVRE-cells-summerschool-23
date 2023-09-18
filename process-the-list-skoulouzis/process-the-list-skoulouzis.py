@@ -19,13 +19,9 @@ a = json.loads(args.a.replace('\'','').replace('[','["').replace(']','"]'))
 
 
 
-b = []
+
 for elem in a:
-    b.append(elem + '_a')
+    res = elem - 1
+    print(res)
     
 
-import json
-filename = "/tmp/b_" + id + ".json"
-file_b = open(filename, "w")
-file_b.write(json.dumps(b))
-file_b.close()
