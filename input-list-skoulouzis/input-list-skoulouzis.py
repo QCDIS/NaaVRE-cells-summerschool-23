@@ -15,7 +15,7 @@ id = args.id
 
 
 
-a = ['a','b','c']
+a = [1, 2, 3]
 
 import json
 filename = "/tmp/a_" + id + ".json"
