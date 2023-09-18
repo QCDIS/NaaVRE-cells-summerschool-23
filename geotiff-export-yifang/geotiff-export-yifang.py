@@ -1,5 +1,5 @@
-import pathlib
 from laserfarm import GeotiffWriter
+import pathlib
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -20,7 +20,8 @@ print(args)
 
 id = args.id
 
-features = args.features
+import json
+features = json.loads(args.features.replace('\'','').replace('[','["').replace(']','"]'))
 
 param_feature_name = args.param_feature_name
 param_hostname = args.param_hostname
@@ -29,14 +30,14 @@ param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
 
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_local_tmp = pathlib.Path(param_remote_path_root + '/tmp')
 conf_remote_path_ahn = pathlib.Path(param_remote_path_root + '/ahn')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
-conf_local_tmp = pathlib.Path('/tmp')
 
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_local_tmp = pathlib.Path(param_remote_path_root + '/tmp')
 conf_remote_path_ahn = pathlib.Path(param_remote_path_root + '/ahn')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
-conf_local_tmp = pathlib.Path('/tmp')
 
 feature = features[0]
 
