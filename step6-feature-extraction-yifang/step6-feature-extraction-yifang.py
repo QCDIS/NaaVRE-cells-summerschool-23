@@ -50,12 +50,12 @@ param_tile_mesh_size = args.param_tile_mesh_size
 param_validate_precision = args.param_validate_precision
 
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_local_tmp = pathlib.Path(param_remote_path_root + '/tmp')
+conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
 
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_local_tmp = pathlib.Path(param_remote_path_root + '/tmp')
+conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
 
