@@ -19,10 +19,13 @@ a = json.loads(args.a.replace('\'','').replace('[','["').replace(']','"]'))
 
 param_a = args.param_a
 
+conf_a = 'not_secret'
 
+conf_a = 'not_secret'
 
 
 print(param_a)
+print(conf_a)
 for elem in a:
     res = elem + '_processed'
     print(res)
