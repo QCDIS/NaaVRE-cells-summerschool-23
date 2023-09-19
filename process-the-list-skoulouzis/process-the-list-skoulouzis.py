@@ -1,3 +1,4 @@
+import calmap
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -25,6 +26,7 @@ conf_a = 'not_secret'
 
 
 print(param_a)
+print(calmap)
 print(conf_a)
 for elem in a:
     res = elem + '_processed'
