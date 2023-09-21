@@ -1,5 +1,5 @@
-from laserfarm import DataProcessing
 import pathlib
+from laserfarm import DataProcessing
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -23,6 +23,7 @@ arg_parser.add_argument('--param_n_tiles_side', action='store', type=int, requir
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
 arg_parser.add_argument('--param_tile_mesh_size', action='store', type=float, required='True', dest='param_tile_mesh_size')
+arg_parser.add_argument('--param_username', action='store', type=float, required='True', dest='param_username')
 arg_parser.add_argument('--param_validate_precision', action='store', type=float, required='True', dest='param_validate_precision')
 
 args = arg_parser.parse_args()
@@ -47,21 +48,21 @@ param_n_tiles_side = args.param_n_tiles_side
 param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
 param_tile_mesh_size = args.param_tile_mesh_size
+param_username = args.param_username
 param_validate_precision = args.param_validate_precision
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
-conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
+conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
-conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets')
+conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
 t = tiles
     
-
 features = [param_feature_name]
 
 tile_mesh_size = float(param_tile_mesh_size)
