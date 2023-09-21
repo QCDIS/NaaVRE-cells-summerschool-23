@@ -21,5 +21,4 @@ a = json.loads(args.a.replace('\'','').replace('[','["').replace(']','"]'))
 for elem in a:
     res = elem + '_processed'
     print(res)
-    
 
