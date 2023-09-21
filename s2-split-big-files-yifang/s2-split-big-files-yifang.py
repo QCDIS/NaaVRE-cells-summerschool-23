@@ -1,7 +1,7 @@
-import laspy
-import numpy as np
 import pathlib
+import laspy
 import os
+import numpy as np
 from webdav3.client import Client
 
 import argparse
@@ -18,6 +18,7 @@ arg_parser.add_argument('--param_login', action='store', type=str, required='Tru
 arg_parser.add_argument('--param_max_filesize', action='store', type=int, required='True', dest='param_max_filesize')
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
+arg_parser.add_argument('--param_username', action='store', type=str, required='True', dest='param_username')
 
 args = arg_parser.parse_args()
 print(args)
@@ -33,14 +34,15 @@ param_login = args.param_login
 param_max_filesize = args.param_max_filesize
 param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
+param_username = args.param_username
 
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root + '/ahn')
+conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
 
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root + '/ahn')
+conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
 
 
 def save_chunk_to_laz_file(in_filename, 
@@ -84,17 +86,19 @@ client.mkdir(conf_remote_path_split.as_posix())
 
 remote_path_split = conf_remote_path_split
 
-file = laz_files
-client.download_sync(remote_path=os.path.join(conf_remote_path_ahn,file), local_path=file)
-inps = split_strategy(file, int(param_max_filesize))
-for inp in inps:
-    save_chunk_to_laz_file(*inp)
-client.upload_sync(remote_path=os.path.join(conf_remote_path_split,file), local_path=file)
 
-for f in os.listdir('.'):
-    if not f.endswith('.LAZ'):
-        continue
-    os.remove(os.path.join('.', f))
+for file in laz_files:
+    print('Splitting: '+file)
+    client.download_sync(remote_path=os.path.join(conf_remote_path_ahn,file), local_path=file)
+    inps = split_strategy(file, int(param_max_filesize))
+    for inp in inps:
+        save_chunk_to_laz_file(*inp)
+    client.upload_sync(remote_path=os.path.join(conf_remote_path_split,file), local_path=file)
+
+    for f in os.listdir('.'):
+        if not f.endswith('.LAZ'):
+            continue
+        os.remove(os.path.join('.', f))
     
 split_laz_files = laz_files
 
