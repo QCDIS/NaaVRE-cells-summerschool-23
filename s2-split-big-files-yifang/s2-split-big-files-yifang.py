@@ -37,10 +37,12 @@ param_remote_path_root = args.param_remote_path_root
 param_username = args.param_username
 
 conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
 
 conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
 
@@ -100,10 +102,10 @@ for file in laz_files:
             continue
         os.remove(os.path.join('.', f))
     
-split_laz_files = laz_files
+remote_path_retiled = str(conf_remote_path_retiled)
 
 import json
-filename = "/tmp/split_laz_files_" + id + ".json"
-file_split_laz_files = open(filename, "w")
-file_split_laz_files.write(json.dumps(split_laz_files))
-file_split_laz_files.close()
+filename = "/tmp/remote_path_retiled_" + id + ".json"
+file_remote_path_retiled = open(filename, "w")
+file_remote_path_retiled.write(json.dumps(remote_path_retiled))
+file_remote_path_retiled.close()
