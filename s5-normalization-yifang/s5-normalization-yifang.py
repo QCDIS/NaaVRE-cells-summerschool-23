@@ -63,7 +63,6 @@ with open('normalize.json', 'w') as f:
     json.dump(normalization_input, f)
     
 
-tile = tiles
 
 for tile in tiles:
     normalization_input_ = copy.deepcopy(normalization_input)
