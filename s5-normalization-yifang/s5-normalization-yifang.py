@@ -1,5 +1,5 @@
-from laserfarm import DataProcessing
 import pathlib
+from laserfarm import DataProcessing
 import copy
 import json
 
@@ -15,6 +15,7 @@ arg_parser.add_argument('--param_hostname', action='store', type=str, required='
 arg_parser.add_argument('--param_login', action='store', type=str, required='True', dest='param_login')
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
+arg_parser.add_argument('--param_username', action='store', type=str, required='True', dest='param_username')
 
 args = arg_parser.parse_args()
 print(args)
@@ -28,16 +29,17 @@ param_hostname = args.param_hostname
 param_login = args.param_login
 param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
+param_username = args.param_username
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
-conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm/')
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
-conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm/')
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
 
 tiles
@@ -62,9 +64,11 @@ with open('normalize.json', 'w') as f:
     
 
 tile = tiles
-normalization_input_ = copy.deepcopy(normalization_input)
-normalization_input_['export_point_cloud'] = {'filename': '{}.laz'.format(tile),'overwrite': True}
-dp = DataProcessing(tile, label=tile).config(normalization_input_).setup_webdav_client(conf_wd_opts)
+
+for tile in tiles:
+    normalization_input_ = copy.deepcopy(normalization_input)
+    normalization_input_['export_point_cloud'] = {'filename': '{}.laz'.format(tile),'overwrite': True}
+    dp = DataProcessing(tile, label=tile).config(normalization_input_).setup_webdav_client(conf_wd_opts)
 dp.run()
 
 remote_path_norm
