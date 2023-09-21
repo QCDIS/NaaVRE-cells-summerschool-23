@@ -1,5 +1,5 @@
-from laserfarm import Retiler
 import pathlib
+from laserfarm import Retiler
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -18,6 +18,7 @@ arg_parser.add_argument('--param_min_y', action='store', type=float, required='T
 arg_parser.add_argument('--param_n_tiles_side', action='store', type=int, required='True', dest='param_n_tiles_side')
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
+arg_parser.add_argument('--param_username', action='store', type=str, required='True', dest='param_username')
 
 args = arg_parser.parse_args()
 print(args)
@@ -36,16 +37,17 @@ param_min_y = args.param_min_y
 param_n_tiles_side = args.param_n_tiles_side
 param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
+param_username = args.param_username
 
+conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split')
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
+conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled/')
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split')
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
 
 
 remote_path_retiled = str(conf_remote_path_retiled)
@@ -73,7 +75,11 @@ retiling_input = {
     
 file = split_laz_files
     
-retiler = Retiler(file,label=file).config(retiling_input).setup_webdav_client(conf_wd_opts)
+for file in split_laz_files:
+    print('Retiling: '+file)
+    retiler = Retiler(file.replace('"',''),label=file).config(retiling_input).setup_webdav_client(conf_wd_opts)
+    retiler_output = retiler.run()
+    
 retiler_output = retiler.run()
 
 import json
