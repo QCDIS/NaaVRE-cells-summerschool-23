@@ -39,18 +39,20 @@ param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
 param_username = args.param_username
 
-conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
 conf_local_tmp = pathlib.Path('/tmp')
-conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
-
 conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
-conf_local_tmp = pathlib.Path('/tmp')
-conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
+conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+
+conf_local_tmp = pathlib.Path('/tmp')
+conf_remote_path_split = pathlib.Path(param_remote_path_root + '/split_'+param_username)
+conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
+conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
 
-remote_path_retiled = str(conf_remote_path_retiled)
+remote_path_split = conf_remote_path_split
 
 grid_retile = {
     'min_x': float(param_min_x),
@@ -71,12 +73,16 @@ retiling_input = {
     'cleanlocalfs': {}
 }
 
-file = split_laz_files[0]    
-retiler = Retiler(file,label=file).config(retiling_input).setup_webdav_client(conf_wd_opts)
-retiler_output = retiler.run()    
+
+for file in split_laz_files:
+    print('Retiling: '+file)
+    retiler = Retiler(file, label=file).config(retiling_input).setup_webdav_client(conf_wd_opts)
+    retiler_output = retiler.run()
+    
+remote_path_norm = str(conf_remote_path_norm)
 
 import json
-filename = "/tmp/remote_path_retiled_" + id + ".json"
-file_remote_path_retiled = open(filename, "w")
-file_remote_path_retiled.write(json.dumps(remote_path_retiled))
-file_remote_path_retiled.close()
+filename = "/tmp/remote_path_norm_" + id + ".json"
+file_remote_path_norm = open(filename, "w")
+file_remote_path_norm.write(json.dumps(remote_path_norm))
+file_remote_path_norm.close()
