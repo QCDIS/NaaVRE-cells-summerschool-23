@@ -25,7 +25,8 @@ print(args)
 
 id = args.id
 
-laz_files = args.laz_files
+import json
+laz_files = json.loads(args.laz_files.replace('\'','').replace('[','["').replace(']','"]'))
 
 param_hostname = args.param_hostname
 param_laz_compression_factor = args.param_laz_compression_factor
