@@ -1,5 +1,5 @@
-import pathlib
 from laserfarm import DataProcessing
+import pathlib
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -50,60 +50,65 @@ param_username = args.param_username
 param_validate_precision = args.param_validate_precision
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-
     
-features = ["perc_95_normalized_height"]
+for t in tiles:
+    
+    features = ["perc_95_normalized_height"]
 
-tile_mesh_size = float(param_tile_mesh_size)
+    tile_mesh_size = float(param_tile_mesh_size)
 
-grid_feature = {
-    'min_x': float(param_min_x),
-    'max_x': float(param_max_x),
-    'min_y': float(param_min_y),
-    'max_y': float(param_max_y),
-    'n_tiles_side': int(param_n_tiles_side)
-}
+    grid_feature = {
+        'min_x': float(param_min_x),
+        'max_x': float(param_max_x),
+        'min_y': float(param_min_y),
+        'max_y': float(param_max_y),
+        'n_tiles_side': int(param_n_tiles_side)
+    }
 
-feature_extraction_input = {
-    'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
-    'pullremote': conf_remote_path_retiled.as_posix(),
-    'load': {'attributes': [param_attribute]},
-    'normalize': 1,
-    'apply_filter': {
-        'filter_type': param_filter_type, 
-        'attribute': param_attribute,
-        'value': [int(param_apply_filter_value)]#ground surface (2), water (9), buildings (6), artificial objects (26), vegetation (?), and unclassified (1)
-    },
-    'generate_targets': {
-        'tile_mesh_size' : tile_mesh_size,
-        'validate' : True,
-        'validate_precision': float(param_validate_precision),
-        **grid_feature
-    },
-    'extract_features': {
-        'feature_names': features,
-        'volume_type': 'cell',
-        'volume_size': tile_mesh_size
-    },
-    'export_targets': {
-        'attributes': features,
-        'multi_band_files': False
-    },
-    'pushremote': conf_remote_path_targets.as_posix(),
-}
-
-for t in tiles:    
+    feature_extraction_input = {
+        'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
+        'pullremote': conf_remote_path_norm.as_posix(),
+        'load': {'attributes': [param_attribute]},
+        'normalize': 1,
+        'apply_filter': {
+            'filter_type': param_filter_type, 
+            'attribute': param_attribute,
+            'value': [int(param_apply_filter_value)]#ground surface (2), water (9), buildings (6), artificial objects (26), vegetation (?), and unclassified (1)
+        },
+        'generate_targets': {
+            'tile_mesh_size' : tile_mesh_size,
+            'validate' : True,
+            'validate_precision': float(param_validate_precision),
+            **grid_feature
+        },
+        'extract_features': {
+            'feature_names': features,
+            'volume_type': 'cell',
+            'volume_size': tile_mesh_size
+        },
+        'export_targets': {
+            'attributes': features,
+            'multi_band_files': False
+        },
+        'pushremote': conf_remote_path_targets.as_posix(),
+    #     'cleanlocalfs': {}
+    }
     idx = (t.split('_')[1:])
+
     processing = DataProcessing(t, tile_index=idx,label=t).config(feature_extraction_input).setup_webdav_client(conf_wd_opts)
     processing.run()
+    
+remote_path_targets = conf_remote_path_targets.as_posix()
+
+print(type(remote_path_targets))
 
 import json
 filename = "/tmp/features_" + id + ".json"
