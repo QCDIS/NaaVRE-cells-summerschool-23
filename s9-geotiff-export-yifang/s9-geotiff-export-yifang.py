@@ -46,7 +46,10 @@ features
 remote_path_geotiffs = conf_remote_path_geotiffs
 
 geotiff_export_input = {
-    'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
+    'setup_local_fs': {
+        'input_folder': (conf_local_tmp / 'tile_input').as_posix(),
+        'output_folder': (conf_local_tmp / 'tile_output').as_posix(),
+    },
     'pullremote': conf_remote_path_targets.as_posix(),
     'parse_point_cloud': {},
     'data_split': {'xSub': 1, 'ySub': 1},
