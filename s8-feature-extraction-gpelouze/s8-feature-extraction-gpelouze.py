@@ -1,5 +1,5 @@
-import pathlib
 from laserfarm import DataProcessing
+import pathlib
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -49,17 +49,18 @@ param_tile_mesh_size = args.param_tile_mesh_size
 param_username = args.param_username
 param_validate_precision = args.param_validate_precision
 
+conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 
+conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 
-    
+remote_path_targets = str(conf_remote_path_targets)
+
 features = ["perc_95_normalized_height"]
 
 tile_mesh_size = float(param_tile_mesh_size)
@@ -108,8 +109,10 @@ for t in tiles:
     processing = DataProcessing(t, tile_index=idx,label=t).config(feature_extraction_input).setup_webdav_client(conf_wd_opts)
     processing.run()
 
+remote_path_targets
+
 import json
-filename = "/tmp/features_" + id + ".json"
-file_features = open(filename, "w")
-file_features.write(json.dumps(features))
-file_features.close()
+filename = "/tmp/remote_path_targets_" + id + ".json"
+file_remote_path_targets = open(filename, "w")
+file_remote_path_targets.write(json.dumps(remote_path_targets))
+file_remote_path_targets.close()
