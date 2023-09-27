@@ -50,12 +50,12 @@ param_username = args.param_username
 param_validate_precision = args.param_validate_precision
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_retiled = pathlib.Path(param_remote_path_root + '/retiled_'+param_username)
+conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
@@ -74,7 +74,7 @@ grid_feature = {
 
 feature_extraction_input = {
     'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
-    'pullremote': conf_remote_path_retiled.as_posix(),
+    'pullremote': conf_remote_path_norm.as_posix(),
     'load': {'attributes': [param_attribute]},
     'normalize': 1,
     'apply_filter': {
