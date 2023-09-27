@@ -7,7 +7,7 @@ arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--id', action='store', type=str, required=True, dest='id')
 
 
-arg_parser.add_argument('--features', action='store', type=str, required='True', dest='features')
+arg_parser.add_argument('--remote_path_targets', action='store', type=str, required='True', dest='remote_path_targets')
 
 arg_parser.add_argument('--param_feature_name', action='store', type=str, required='True', dest='param_feature_name')
 arg_parser.add_argument('--param_hostname', action='store', type=str, required='True', dest='param_hostname')
@@ -21,8 +21,7 @@ print(args)
 
 id = args.id
 
-import json
-features = json.loads(args.features.replace('\'','').replace('[','["').replace(']','"]'))
+remote_path_targets = args.remote_path_targets
 
 param_feature_name = args.param_feature_name
 param_hostname = args.param_hostname
@@ -41,15 +40,12 @@ conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+par
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 conf_remote_path_geotiffs = pathlib.Path(param_remote_path_root + '/geotiffs_'+param_username)
 
-features
+remote_path_targets
 
 remote_path_geotiffs = conf_remote_path_geotiffs
 
 geotiff_export_input = {
-    'setup_local_fs': {
-        'input_folder': (conf_local_tmp / 'tile_input').as_posix(),
-        'output_folder': (conf_local_tmp / 'tile_output').as_posix(),
-    },
+    'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
     'pullremote': conf_remote_path_targets.as_posix(),
     'parse_point_cloud': {},
     'data_split': {'xSub': 1, 'ySub': 1},
