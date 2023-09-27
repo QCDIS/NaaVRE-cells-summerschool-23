@@ -21,7 +21,7 @@ arg_parser.add_argument('--param_min_y', action='store', type=float, required='T
 arg_parser.add_argument('--param_n_tiles_side', action='store', type=int, required='True', dest='param_n_tiles_side')
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
-arg_parser.add_argument('--param_tile_mesh_size', action='store', type=float, required='True', dest='param_tile_mesh_size')
+arg_parser.add_argument('--param_tile_mesh_size', action='store', type=int, required='True', dest='param_tile_mesh_size')
 arg_parser.add_argument('--param_username', action='store', type=str, required='True', dest='param_username')
 arg_parser.add_argument('--param_validate_precision', action='store', type=float, required='True', dest='param_validate_precision')
 
@@ -58,57 +58,52 @@ conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_norm = pathlib.Path(param_remote_path_root + '/norm_'+param_username)
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+
     
-for t in tiles:
-    
-    features = ["perc_95_normalized_height"]
+features = ["perc_95_normalized_height"]
 
-    tile_mesh_size = float(param_tile_mesh_size)
+tile_mesh_size = float(param_tile_mesh_size)
 
-    grid_feature = {
-        'min_x': float(param_min_x),
-        'max_x': float(param_max_x),
-        'min_y': float(param_min_y),
-        'max_y': float(param_max_y),
-        'n_tiles_side': int(param_n_tiles_side)
-    }
+grid_feature = {
+    'min_x': float(param_min_x),
+    'max_x': float(param_max_x),
+    'min_y': float(param_min_y),
+    'max_y': float(param_max_y),
+    'n_tiles_side': int(param_n_tiles_side)
+}
 
-    feature_extraction_input = {
-        'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
-        'pullremote': conf_remote_path_norm.as_posix(),
-        'load': {'attributes': [param_attribute]},
-        'normalize': 1,
-        'apply_filter': {
-            'filter_type': param_filter_type, 
-            'attribute': param_attribute,
-            'value': [int(param_apply_filter_value)]#ground surface (2), water (9), buildings (6), artificial objects (26), vegetation (?), and unclassified (1)
-        },
-        'generate_targets': {
-            'tile_mesh_size' : tile_mesh_size,
-            'validate' : True,
-            'validate_precision': float(param_validate_precision),
-            **grid_feature
-        },
-        'extract_features': {
-            'feature_names': features,
-            'volume_type': 'cell',
-            'volume_size': tile_mesh_size
-        },
-        'export_targets': {
-            'attributes': features,
-            'multi_band_files': False
-        },
-        'pushremote': conf_remote_path_targets.as_posix(),
-    #     'cleanlocalfs': {}
-    }
+feature_extraction_input = {
+    'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
+    'pullremote': conf_remote_path_norm.as_posix(),
+    'load': {'attributes': [param_attribute]},
+    'normalize': 1,
+    'apply_filter': {
+        'filter_type': param_filter_type, 
+        'attribute': param_attribute,
+        'value': [int(param_apply_filter_value)]#ground surface (2), water (9), buildings (6), artificial objects (26), vegetation (?), and unclassified (1)
+    },
+    'generate_targets': {
+        'tile_mesh_size' : tile_mesh_size,
+        'validate' : True,
+        'validate_precision': float(param_validate_precision),
+        **grid_feature
+    },
+    'extract_features': {
+        'feature_names': features,
+        'volume_type': 'cell',
+        'volume_size': tile_mesh_size
+    },
+    'export_targets': {
+        'attributes': features,
+        'multi_band_files': False
+    },
+    'pushremote': conf_remote_path_targets.as_posix(),
+}
+
+for t in tiles:    
     idx = (t.split('_')[1:])
-
     processing = DataProcessing(t, tile_index=idx,label=t).config(feature_extraction_input).setup_webdav_client(conf_wd_opts)
     processing.run()
-    
-remote_path_targets = conf_remote_path_targets.as_posix()
-
-print(type(remote_path_targets))
 
 import json
 filename = "/tmp/features_" + id + ".json"
