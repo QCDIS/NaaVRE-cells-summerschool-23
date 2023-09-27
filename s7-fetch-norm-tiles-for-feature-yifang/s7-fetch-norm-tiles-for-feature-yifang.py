@@ -39,6 +39,8 @@ remote_path_norm
 tiles = [f for f in list_remote(get_wdclient(conf_wd_opts), pathlib.Path(conf_remote_path_norm).as_posix())
              if f.lower().endswith('.laz')]
 
+tiles
+
 import json
 filename = "/tmp/tiles_" + id + ".json"
 file_tiles = open(filename, "w")
