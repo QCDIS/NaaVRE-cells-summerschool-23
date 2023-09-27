@@ -1,6 +1,6 @@
 from laserfarm.remote_utils import list_remote
-import pathlib
 from laserfarm.remote_utils import get_wdclient
+import pathlib
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -24,10 +24,10 @@ param_login = args.param_login
 param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
 
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/ahn')
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/ahn')
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
 laz_files = [f for f in list_remote(get_wdclient(conf_wd_opts), conf_remote_path_ahn.as_posix())
