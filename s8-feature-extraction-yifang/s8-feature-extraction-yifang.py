@@ -21,7 +21,7 @@ arg_parser.add_argument('--param_min_y', action='store', type=float, required='T
 arg_parser.add_argument('--param_n_tiles_side', action='store', type=int, required='True', dest='param_n_tiles_side')
 arg_parser.add_argument('--param_password', action='store', type=str, required='True', dest='param_password')
 arg_parser.add_argument('--param_remote_path_root', action='store', type=str, required='True', dest='param_remote_path_root')
-arg_parser.add_argument('--param_tile_mesh_size', action='store', type=int, required='True', dest='param_tile_mesh_size')
+arg_parser.add_argument('--param_tile_mesh_size', action='store', type=float, required='True', dest='param_tile_mesh_size')
 arg_parser.add_argument('--param_username', action='store', type=str, required='True', dest='param_username')
 arg_parser.add_argument('--param_validate_precision', action='store', type=float, required='True', dest='param_validate_precision')
 
@@ -73,7 +73,10 @@ grid_feature = {
 }
 
 feature_extraction_input = {
-    'setup_local_fs': {'tmp_folder': conf_local_tmp.as_posix()},
+    'setup_local_fs': {
+        'input_folder': (conf_local_tmp / 'tile_input').as_posix(),
+        'output_folder': (conf_local_tmp / 'tile_output').as_posix(),
+    },
     'pullremote': conf_remote_path_norm.as_posix(),
     'load': {'attributes': [param_attribute]},
     'normalize': 1,
@@ -101,7 +104,7 @@ feature_extraction_input = {
 }
 
 for t in tiles:    
-    idx = (t.split('_')[1:])
+    idx = (t.split('.')[0].split('_')[1:])
     processing = DataProcessing(t, tile_index=idx,label=t).config(feature_extraction_input).setup_webdav_client(conf_wd_opts)
     processing.run()
 
