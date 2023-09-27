@@ -1,5 +1,5 @@
-import pathlib
 from laserfarm import GeotiffWriter
+import pathlib
 
 import argparse
 arg_parser = argparse.ArgumentParser()
@@ -7,7 +7,7 @@ arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--id', action='store', type=str, required=True, dest='id')
 
 
-arg_parser.add_argument('--features', action='store', type=str, required='True', dest='features')
+arg_parser.add_argument('--remote_path_targets', action='store', type=str, required='True', dest='remote_path_targets')
 
 arg_parser.add_argument('--param_feature_name', action='store', type=str, required='True', dest='param_feature_name')
 arg_parser.add_argument('--param_hostname', action='store', type=str, required='True', dest='param_hostname')
@@ -21,8 +21,7 @@ print(args)
 
 id = args.id
 
-import json
-features = json.loads(args.features.replace('\'','').replace('[','["').replace(']','"]'))
+remote_path_targets = args.remote_path_targets
 
 param_feature_name = args.param_feature_name
 param_hostname = args.param_hostname
@@ -31,17 +30,17 @@ param_password = args.param_password
 param_remote_path_root = args.param_remote_path_root
 param_username = args.param_username
 
-conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_geotiffs = pathlib.Path(param_remote_path_root + '/geotiffs_'+param_username)
-
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
-conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
-conf_local_tmp = pathlib.Path('/tmp')
 conf_remote_path_geotiffs = pathlib.Path(param_remote_path_root + '/geotiffs_'+param_username)
+conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 
-features
+conf_local_tmp = pathlib.Path('/tmp')
+conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
+conf_remote_path_geotiffs = pathlib.Path(param_remote_path_root + '/geotiffs_'+param_username)
+conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
+
+remote_path_targets
 
 remote_path_geotiffs = conf_remote_path_geotiffs
 
