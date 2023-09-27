@@ -32,12 +32,12 @@ param_remote_path_root = args.param_remote_path_root
 param_username = args.param_username
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/ahn')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
 conf_local_tmp = pathlib.Path('/tmp')
-conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/anh')
+conf_remote_path_ahn = pathlib.Path(param_remote_path_root+'/ahn')
 conf_remote_path_targets = pathlib.Path(param_remote_path_root + '/targets_'+param_username)
 conf_wd_opts = { 'webdav_hostname': param_hostname, 'webdav_login': param_login, 'webdav_password': param_password}
 
