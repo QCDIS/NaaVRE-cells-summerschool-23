@@ -13,10 +13,11 @@ print(args)
 
 id = args.id
 
-names = args.names
+import json
+names = json.loads(args.names.replace('\'','').replace('[','["').replace(']','"]'))
 
 
 
 for name in names:
-    print(f"¡Hola, {name}!")
+    print(f"Hola, {name}!")
 
