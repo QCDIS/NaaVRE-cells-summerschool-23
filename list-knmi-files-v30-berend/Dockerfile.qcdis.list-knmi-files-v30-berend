@@ -12,4 +12,3 @@ RUN apt update -y && apt upgrade -y && apt install jq -y
 COPY --from=build /venv /venv
 COPY list-knmi-files-v30-berend.py .
 
-
