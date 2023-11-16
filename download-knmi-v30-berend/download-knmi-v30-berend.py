@@ -1,6 +1,6 @@
 import requests
-from pathlib import Path
 import os
+from pathlib import Path
 
 import argparse
 arg_parser = argparse.ArgumentParser()
