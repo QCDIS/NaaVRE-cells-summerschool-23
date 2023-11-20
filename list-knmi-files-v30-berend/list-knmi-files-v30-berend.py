@@ -33,7 +33,7 @@ conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.da
 conf_interval = 60 # minutes, HH:00
 conf_worker_chunk_size = 12 * 24
 if init_complete == "Yes":
-    #print("Workflow configuration succesfull")
+    print("Workflow configuration succesfull")
     # Notes:
     # Timestamps in iso8601
     # 2020-01-01T00:00+00:00
@@ -43,6 +43,10 @@ if init_complete == "Yes":
     start_ts = param_start_date
     end_ts = param_end_date
     datasetName, datasetVersion, api_url, _ = conf_radars.get(param_radar)
+    print("datasetName: "+datasetName)
+    print("datasetVersion: " +datasetVersion)
+    print("param_start_date: "+param_start_date)
+    print("param_end_date: "+param_end_date)
     params = {'datasetName' : datasetName,
               'datasetVersion' : datasetVersion,
               'maxKeys' : 10,
