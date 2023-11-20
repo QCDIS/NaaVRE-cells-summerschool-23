@@ -149,7 +149,7 @@ def knmi_to_odim(in_fpath,out_fpath):
 
     Returns out_fpath and returncode
     """
-    converter = 'KNMI_vol_h5_to_ODIM_h5'
+    converter = '/opt/radar/vol2bird/bin/./KNMI_vol_h5_to_ODIM_h5'
     command = [converter,
                out_fpath,
                in_fpath]         
