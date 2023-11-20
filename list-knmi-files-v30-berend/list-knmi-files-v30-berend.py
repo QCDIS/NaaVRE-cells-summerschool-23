@@ -6,34 +6,34 @@ arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('--id', action='store', type=str, required=True, dest='id')
 
 
-arg_parser.add_argument('--config_complete', action='store', type=str, required='True', dest='config_complete')
+arg_parser.add_argument('--init_complete', action='store', type=str, required='True', dest='init_complete')
 
 arg_parser.add_argument('--param_api_key', action='store', type=str, required='True', dest='param_api_key')
 arg_parser.add_argument('--param_end_date', action='store', type=str, required='True', dest='param_end_date')
 arg_parser.add_argument('--param_radar', action='store', type=str, required='True', dest='param_radar')
 arg_parser.add_argument('--param_start_date', action='store', type=str, required='True', dest='param_start_date')
-arg_parser.add_argument('--param_worker_chunk_size', action='store', type=int, required='True', dest='param_worker_chunk_size')
 
 args = arg_parser.parse_args()
 print(args)
 
 id = args.id
 
-config_complete = args.config_complete
+init_complete = args.init_complete
 
 param_api_key = args.param_api_key
 param_end_date = args.param_end_date
 param_radar = args.param_radar
 param_start_date = args.param_start_date
-param_worker_chunk_size = args.param_worker_chunk_size
 
-conf_interval = 5 # minutes, HH:00,HH:05,HH:10,HH:15,HH:20,HH:25,HH:30,HH:35,HH:40,HH:45,HH:50,HH:55
 conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_full_herwijnen/versions/1.0/files','NL/HRW'],'denhelder' :  ['radar_volume_full_denhelder',2.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_denhelder/versions/2.0/files','NL/DHL']}
+conf_interval = 60 # minutes, HH:00
+conf_worker_chunk_size = 12 * 24
 
-conf_interval = 5 # minutes, HH:00,HH:05,HH:10,HH:15,HH:20,HH:25,HH:30,HH:35,HH:40,HH:45,HH:50,HH:55
 conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_full_herwijnen/versions/1.0/files','NL/HRW'],'denhelder' :  ['radar_volume_full_denhelder',2.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_denhelder/versions/2.0/files','NL/DHL']}
-if config_complete == "Yes":
-    print("Workflow configuration succesfull")
+conf_interval = 60 # minutes, HH:00
+conf_worker_chunk_size = 12 * 24
+if init_complete == "Yes":
+    #print("Workflow configuration succesfull")
     # Notes:
     # Timestamps in iso8601
     # 2020-01-01T00:00+00:00
@@ -88,11 +88,11 @@ if config_complete == "Yes":
     print(dataset_files)
     
     # Now rewrite into a nested list to control parallelization
+    _ = []
     while dataset_files:
-        _.append(dataset_files[:param_worker_chunk_size])
-        dataset_files = dataset_files[param_worker_chunk_size:]
+        _.append(dataset_files[:conf_worker_chunk_size])
+        dataset_files = dataset_files[conf_worker_chunk_size:]
     dataset_files = _
-        
 else:
     pass
 
