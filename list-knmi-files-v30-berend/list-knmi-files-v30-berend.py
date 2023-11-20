@@ -98,6 +98,7 @@ if init_complete == "Yes":
         dataset_files = dataset_files[conf_worker_chunk_size:]
     dataset_files = _
 else:
+    print("Initialization was not complete")
     pass
 
 import json
