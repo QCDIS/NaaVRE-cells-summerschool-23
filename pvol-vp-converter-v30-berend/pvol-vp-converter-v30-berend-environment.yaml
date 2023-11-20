@@ -5,5 +5,5 @@ dependencies:
   - pip
   - python>=3.8
   - pandas
-  - webdav3.client
+  - webdavclient3
   - h5py
