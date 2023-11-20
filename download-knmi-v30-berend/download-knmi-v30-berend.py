@@ -1,5 +1,4 @@
 import requests
-import os
 from pathlib import Path
 
 import argparse
@@ -24,34 +23,53 @@ dataset_files = json.loads(args.dataset_files)
 param_api_key = args.param_api_key
 param_radar = args.param_radar
 
-conf_knmi_dir = f'{os.environ.get("HOME")}/data/KNMI'
+conf_local_knmi = "/tmp/data/knmi"
 conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_full_herwijnen/versions/1.0/files','NL/HRW'],'denhelder' :  ['radar_volume_full_denhelder',2.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_denhelder/versions/2.0/files','NL/DHL']}
+conf_worker_chunk_size = 12 * 24
 
-conf_knmi_dir = f'{os.environ.get("HOME")}/data/KNMI'
+conf_local_knmi = "/tmp/data/knmi"
 conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_full_herwijnen/versions/1.0/files','NL/HRW'],'denhelder' :  ['radar_volume_full_denhelder',2.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_denhelder/versions/2.0/files','NL/DHL']}
+conf_worker_chunk_size = 12 * 24
+check_list = []
+for dataset_file in dataset_files:
+    if isinstance(dataset_file,list):
+        check_list += dataset_file
+    else:
+        check_list.append(dataset_file)
+dataset_files = check_list   
+n_files = len(dataset_files)      
+print(f"Starting download of {n_files} files.")
 _, _, api_url, radar_code = conf_radars.get(param_radar)
 knmi_pvol_paths = []
-n_files = len(dataset_files)
-print(f"Starting download of {n_files} files.")
 idx = 1
 for dataset_file in dataset_files:
-    print(f"Downloading file {idx}/{n_files}")
     filename = dataset_file[0]
-    endpoint = f"{api_url}/{filename}/url"
-    get_file_response = requests.get(endpoint, headers={"Authorization": param_api_key})
-    download_url = get_file_response.json().get("temporaryDownloadUrl")
-    dataset_file_response = requests.get(download_url)
     fname_parts = filename.split('_')
     fname_date_part = fname_parts[-1].split('.')[0]
     year = fname_date_part[0:4]
     month = fname_date_part[4:6]
     day = fname_date_part[6:8]
-    p = Path(f"{conf_knmi_dir}/{year}/{month}/{day}/{filename}")
+    p = Path(f"{conf_local_knmi}/{radar_code}/{year}/{month}/{day}/{filename}")
     knmi_pvol_paths.append('{}'.format(str(p)))
-    p.parent.mkdir(parents=True,exist_ok=True)
-    p.write_bytes(dataset_file_response.content)
+    
+    if not p.exists():
+        print(f"Downloading file {idx}/{n_files}")
+        endpoint = f"{api_url}/{filename}/url"
+        get_file_response = requests.get(endpoint, headers={"Authorization": param_api_key})
+        download_url = get_file_response.json().get("temporaryDownloadUrl")
+        dataset_file_response = requests.get(download_url)
+        p.parent.mkdir(parents=True,exist_ok=True)
+        p.write_bytes(dataset_file_response.content)
+    else:
+        print(f"{p} already exists, skipping")
     idx += 1
+_ = []
+while knmi_pvol_paths:
+    _.append(knmi_pvol_paths[:conf_worker_chunk_size])
+    knmi_pvol_paths = knmi_pvol_paths[conf_worker_chunk_size:]
+knmi_pvol_paths = _
 print(knmi_pvol_paths)
+print("Finished downloading files")
 
 import json
 filename = "/tmp/knmi_pvol_paths_" + id + ".json"
