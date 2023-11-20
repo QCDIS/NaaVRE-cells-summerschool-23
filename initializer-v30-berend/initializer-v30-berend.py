@@ -1,6 +1,6 @@
 import pathlib
 import os
-import webdav3.client as wc
+from webdav3 import client as wc
 
 import argparse
 arg_parser = argparse.ArgumentParser()
