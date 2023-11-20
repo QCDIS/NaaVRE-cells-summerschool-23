@@ -4,7 +4,7 @@ import subprocess
 import pathlib
 import h5py
 import sys
-import webdav3.client as wc
+from webdav3 import client as wc
 import os
 import json
 
@@ -180,7 +180,7 @@ if conf_clean_pvol_output:
 
 if conf_upload_results:
     print(f"Uploading results to {conf_webdav_output_vp}")
-    import webdav3.client as wc
+    from webdav3 import client as wc
     options = {
      'webdav_hostname': param_webdav_endpoint,
      'webdav_login':    param_webdav_user,
