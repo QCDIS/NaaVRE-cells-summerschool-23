@@ -34,7 +34,8 @@ conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.da
 conf_interval = 60 # minutes, HH:00
 conf_worker_chunk_size = 12 * 24
 print("init_complete: "+init_complete)
-if init_complete == "Yes":
+
+if eval(init_complete) == "Yes":
     print("Workflow configuration succesfull")
 else:
     print("Workflow configuration was not complete, exitting")
