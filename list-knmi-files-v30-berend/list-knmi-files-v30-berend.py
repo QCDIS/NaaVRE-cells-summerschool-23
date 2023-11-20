@@ -33,6 +33,7 @@ conf_worker_chunk_size = 12 * 24
 conf_radars = {'herwijnen' :  ['radar_volume_full_herwijnen',1.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_full_herwijnen/versions/1.0/files','NL/HRW'],'denhelder' :  ['radar_volume_full_denhelder',2.0,'https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_volume_denhelder/versions/2.0/files','NL/DHL']}
 conf_interval = 60 # minutes, HH:00
 conf_worker_chunk_size = 12 * 24
+print("init_complete: "+init_complete)
 if init_complete == "Yes":
     print("Workflow configuration succesfull")
 else:
